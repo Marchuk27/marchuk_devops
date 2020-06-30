@@ -14,7 +14,8 @@ pipeline {
                             sh "echo '${password}' | sudo -S docker stop marchuk_nginx"
                             sh "echo '${password}' | sudo -S docker container rm marchuk_nginx"
                         } catch (Exception e) {
-                            print 'container does not exist, skip clean'
+                              print 'UNSUCCESSFULL BUILD'
+			                  currentBuild.result = 'FAILURE'
                         }
                     }
                 }
@@ -39,7 +40,6 @@ pipeline {
                         passwordVariable: 'password')
                     ]) {
                         sh "echo '${password}' | sudo -S docker build ${WORKSPACE}/auto -t marchuk_nginx"
-                        currentBuild.result = 'failed'
                         sh "echo '${password}' | sudo -S docker run -d -p 2703:80 --name marchuk_nginx -v /home/adminci/is_mount_dir:/stat marchuk_nginx"
                     }
                 }
