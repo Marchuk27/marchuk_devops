@@ -15,7 +15,7 @@ pipeline {
                             sh "echo '${password}' | sudo -S docker container rm marchuk_nginx"
                         } catch (Exception e) {
                               print 'UNSUCCESSFULL BUILD'
-			                  currentBuild.result = 'FAILURE'
+			      currentBuild.result = 'FAILURE'
                         }
                     }
                 }
