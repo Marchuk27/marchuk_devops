@@ -38,14 +38,14 @@ pipeline {
                         usernameVariable: 'username',
                         passwordVariable: 'password')
                     ]) {
-
                         sh "echo '${password}' | sudo -S docker build ${WORKSPACE}/auto -t marchuk_nginx"
                         sh "echo '${password}' | sudo -S docker run -d -p 2703:80 --name marchuk_nginx -v /home/adminci/is_mount_dir:/stat marchuk_nginx"
                     }
                 }
             }
-        }
-        stage ('Get stats & write to file'){
+        }                
+       
+        stage ('Get stats & write to file') {
             steps{
                 script{
                     withCredentials([
@@ -60,5 +60,22 @@ pipeline {
             }
         }
         
+        stage ('Stopim & ronyaem stage'){
+            steps{
+                script{
+                     withCredentials([
+                        usernamePassword(credentialsId: 'srv_sudo',
+                        usernameVariable: 'username',
+                        passwordVariable: 'password')
+                    ]) {
+                        try {
+                            sh "echo 'the end' | sudo -S docker stop marchuk_nginx"
+                        } catch (Exception e) {
+                            print print 'container does not exist'
+                        }
+                    }
+                }
+            }
+        }
     }   
 }
